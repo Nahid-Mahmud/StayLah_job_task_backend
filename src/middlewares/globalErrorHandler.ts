@@ -2,7 +2,6 @@ import type { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
-import envVariables from '../config/env';
 import { TErrorSources } from '../interfaces/error.types';
 import { handleValidationError } from '../errors/handleValidationError';
 import { handleZodError } from '../errors/handleZodError';
@@ -12,6 +11,7 @@ import { handlePrismaRustPanicError } from '../errors/handlePrismaRustPanicError
 import { handlePrismaUnknownRequestError } from '../errors/handlePrismaUnknownRequestError';
 import ApiError from '../errors/ApiError';
 import AppError from '../errors/AppError';
+import envVariables from '../app/config/env';
 
 const globalErrorHandler = (
   error: Error & { statusCode?: number; name?: string },

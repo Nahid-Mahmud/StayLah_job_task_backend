@@ -1,4 +1,5 @@
-import { uploadFileToCloudinary } from '../config/cloudinary.config';
+import { uploadFileToCloudinary } from "../app/config/cloudinary.config";
+
 
 export const handleSingleFileUpload = async (
   file: Express.Multer.File | undefined,

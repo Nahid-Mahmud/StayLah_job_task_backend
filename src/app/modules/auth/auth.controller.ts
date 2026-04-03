@@ -1,7 +1,8 @@
-import { catchAsync } from '../../utils/catchAsync';
-import sendResponse from '../../utils/sendResponse';
-import { generateAuthTokens } from '../../utils/userTokens';
-import { setAuthCookie } from '../../utils';
+
+import { setAuthCookie } from '../../../utils';
+import { catchAsync } from '../../../utils/catchAsync';
+import sendResponse from '../../../utils/sendResponse';
+import { generateAuthTokens } from '../../../utils/userTokens';
 import { authService } from './auth.service';
 
 const register = catchAsync(async (req, res) => {

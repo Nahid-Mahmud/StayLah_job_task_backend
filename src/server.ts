@@ -1,7 +1,10 @@
 import type { Server } from 'http';
 import { app } from './app';
-import envVariables from './config/env';
-import { prisma } from './config/prisma';
+import envVariables from './app/config/env';
+import { prisma } from './app/config/prisma';
+import { socketService } from './app/config/socket.config';
+import './app/modules/notification/notification.worker';
+import './app/modules/csv/csv-processing.worker';
 
 let server: Server;
 
@@ -23,6 +26,12 @@ async function startServer() {
       // eslint-disable-next-line no-console
       console.log(`Server is running on port ${envVariables.PORT}`);
     });
+
+    // Initialize Socket.io
+    socketService.init(server);
+
+    // eslint-disable-next-line no-console
+    console.log('Notification and CSV workers are active');
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);

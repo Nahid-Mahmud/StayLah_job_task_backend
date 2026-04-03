@@ -7,13 +7,16 @@ import cors, { type CorsOptions } from 'cors';
 import cookieParser from 'cookie-parser';
 import expressSession from 'express-session';
 import morgan from 'morgan';
-import { router } from './routes';
+import { router } from './app/routes';
 import notFound from './middlewares/notFound';
 import globalErrorHandler from './middlewares/globalErrorHandler';
-import envVariables from './config/env';
+import envVariables from './app/config/env';
+import { globalRateLimiter, abnormalTrafficDetector } from './middlewares/rateLimit';
 
 export const app: Application = express();
 app.use(cookieParser());
+app.use(abnormalTrafficDetector);
+app.use(globalRateLimiter);
 
 const corsOptions: CorsOptions = {
   origin:

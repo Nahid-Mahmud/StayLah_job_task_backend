@@ -1,10 +1,12 @@
 import { StatusCodes } from 'http-status-codes';
 
 import { generateJwtToken, verifyJwtToken } from './jwt';
-import envVariables from '../config/env';
+
 import AppError from '../errors/AppError';
-import { prisma } from '../config/prisma';
+
 import { UserRole } from '@prisma/client';
+import envVariables from '../app/config/env';
+import { prisma } from '../app/config/prisma';
 
 export const generateAuthTokens = (user: {
   id: string;

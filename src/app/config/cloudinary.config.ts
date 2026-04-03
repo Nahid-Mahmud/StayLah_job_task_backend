@@ -3,8 +3,9 @@ import { StatusCodes } from 'http-status-codes';
 
 import crypto from 'crypto';
 import stream from 'stream';
-import AppError from '../errors/AppError';
+
 import envVariables from './env';
+import AppError from '../../errors/AppError';
 
 cloudinary.config({
   cloud_name: envVariables.CLOUDINARY.CLOUDINARY_CLOUD_NAME,

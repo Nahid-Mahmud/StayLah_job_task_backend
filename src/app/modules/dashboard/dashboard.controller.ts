@@ -1,20 +1,12 @@
+import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { dashboardService } from './dashboard.service';
 import sendResponse from '../../../utils/sendResponse';
+import { dashboardService } from './dashboard.service';
 
 export const dashboardController = {
-  async getSummary(req: any, res: any, next: any) {
+  async getSummary(req: Request, res: Response, next: NextFunction) {
     try {
-      const { startDate, endDate, companyType, businessType } = req.query;
-
-      const filters = {
-        startDate: startDate ? new Date(startDate) : undefined,
-        endDate: endDate ? new Date(endDate) : undefined,
-        companyType,
-        businessType,
-      };
-
-      const result = await dashboardService.getSummary(filters);
+      const result = await dashboardService.getSummary(req.query);
 
       sendResponse(res, {
         success: true,

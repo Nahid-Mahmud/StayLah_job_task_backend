@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UserRole } from '@prisma/client';
-import envVariables from '../config/env';
+
 import AppError from '../errors/AppError';
 import { verifyJwtToken } from '../utils/jwt';
-import { prisma } from '../config/prisma';
+import envVariables from '../app/config/env';
+import { prisma } from '../app/config/prisma';
 
 export const checkAuth =
   (...authRoles: UserRole[]) =>

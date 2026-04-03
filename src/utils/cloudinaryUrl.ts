@@ -1,4 +1,4 @@
-import envVariables from '../config/env';
+import envVariables from '../app/config/env';
 
 export const buildCloudinarySecureUrl = (
   publicId?: string | null

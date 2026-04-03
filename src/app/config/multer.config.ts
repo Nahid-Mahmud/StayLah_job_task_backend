@@ -26,6 +26,10 @@ const fileFilter = (
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ) {
     cb(null, true);
+  }
+  // Allow CSV
+  else if (file.mimetype === 'text/csv' || file.originalname.endsWith('.csv')) {
+    cb(null, true);
   } else {
     cb(null, false);
   }
