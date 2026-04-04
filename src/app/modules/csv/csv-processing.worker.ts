@@ -81,6 +81,10 @@ export const csvWorker = new Worker(
   }
 );
 
+// Helper to strip surrounding quotes from CSV fields
+const cleanValue = (val: string | undefined): string =>
+  val?.replace(/^["']|["']$/g, '').trim() || '';
+
 const processBatchInTransaction = async (batch: Record<string, string>[]) => {
   await prisma.$transaction(async (tx) => {
     const chunks = chunkArray(batch, CHUNK_SIZE);
@@ -88,7 +92,7 @@ const processBatchInTransaction = async (batch: Record<string, string>[]) => {
     for (const chunk of chunks) {
       // 1. Extract valid UUIDs to check against the database
       const rawHotelIds = chunk
-        .map((row) => row.hotel_id || row.hotelId || '')
+        .map((row) => cleanValue(row.hotel_id || row.hotelId))
         .filter((id) =>
           /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)
         );
@@ -102,12 +106,12 @@ const processBatchInTransaction = async (batch: Record<string, string>[]) => {
 
       const transactionsData = chunk
         .filter((row) => {
-          const id = row.hotel_id || row.hotelId || '';
+          const id = cleanValue(row.hotel_id || row.hotelId);
           return validHotelIds.has(id);
         })
         .map((row) => {
           // 3. Clean the input
-          const rawStatus = row.status?.trim().toLowerCase();
+          const rawStatus = cleanValue(row.status).toLowerCase();
 
           // 4. Map to the exact Enum key used in your schema.prisma
           let finalStatus: TransactionStatus;
@@ -116,10 +120,10 @@ const processBatchInTransaction = async (batch: Record<string, string>[]) => {
           else finalStatus = TransactionStatus.pending;
 
           return {
-            hotelId: row.hotel_id || row.hotelId || '',
-            amount: new Prisma.Decimal(parseFloat(row.amount) || 0),
+            hotelId: cleanValue(row.hotel_id || row.hotelId),
+            amount: new Prisma.Decimal(parseFloat(cleanValue(row.amount)) || 0),
             status: finalStatus,
-            createdAt: row.created_at ? new Date(row.created_at) : new Date(),
+            createdAt: row.created_at ? new Date(cleanValue(row.created_at)) : new Date(),
           };
         });
 
@@ -128,6 +132,13 @@ const processBatchInTransaction = async (batch: Record<string, string>[]) => {
           data: transactionsData,
           skipDuplicates: true,
         });
+      }
+
+      // Log skipped records for debugging
+      const skippedCount = chunk.length - transactionsData.length;
+      if (skippedCount > 0) {
+        // eslint-disable-next-line no-console
+        console.log(`Skipped ${skippedCount} records in chunk (invalid UUIDs or non-existent hotel IDs)`);
       }
     }
   });

@@ -18,7 +18,7 @@ export const notificationWorker = new Worker(
       );
 
       // 2. Broadcast via WebSocket
-      socketService.emit('transaction_failed', {
+      socketService.emit('TransactionFailed', {
         transactionId,
         hotelId,
         reason,
