@@ -15,5 +15,5 @@ export const csvQueue = new Queue('csv-processing', {
 });
 
 export const addCSVJob = async (filePath: string) => {
-  await csvQueue.add('process-csv', { filePath });
+  return csvQueue.add('process-csv', { filePath });
 };
