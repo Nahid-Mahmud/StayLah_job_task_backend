@@ -5,6 +5,8 @@ import { validateRequest } from '../../../middlewares/validateRequest';
 
 const router = Router();
 
+router.get('/', formController.getAllForms);
+
 router.post(
   '/',
   validateRequest(formValidation.createFormValidationSchema),

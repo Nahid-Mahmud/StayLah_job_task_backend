@@ -19,6 +19,17 @@ export const formController = {
     });
   }),
 
+  getAllForms: catchAsync(async (req: Request, res: Response) => {
+    const result = await formService.getAllForms();
+
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: 'Forms fetched successfully',
+      data: result,
+    });
+  }),
+
   getFormById: catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await formService.getFormById(id as string);
@@ -45,12 +56,17 @@ export const formController = {
       return;
     }
 
-    const dynamicSchema = generateZodSchema(form.schema as unknown as IFormSchema);
-    
+    const dynamicSchema = generateZodSchema(
+      form.schema as unknown as IFormSchema
+    );
+
     // Validate the incoming data against the dynamic schema
     const validatedData = dynamicSchema.parse(data);
 
-    const result = await formService.submitForm(id as string, validatedData as Prisma.InputJsonValue);
+    const result = await formService.submitForm(
+      id as string,
+      validatedData as Prisma.InputJsonValue
+    );
 
     sendResponse(res, {
       success: true,

@@ -11,6 +11,10 @@ export const formService = {
     });
   },
 
+  getAllForms: async () => {
+    return prisma.form.findMany();
+  },
+
   getFormById: async (id: string) => {
     return prisma.form.findUnique({
       where: { id },
