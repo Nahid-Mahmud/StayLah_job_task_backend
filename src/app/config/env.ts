@@ -22,7 +22,8 @@ interface EnvVariables {
     CLOUDINARY_API_KEY: string;
     CLOUDINARY_API_SECRET: string;
   };
-  REDIS_URL: string;
+  REDIS_HOST: string;
+  REDIS_PORT: string;
 }
 
 const loadEnvVariable = (): EnvVariables => {
@@ -41,7 +42,8 @@ const loadEnvVariable = (): EnvVariables => {
     'CLOUDINARY_CLOUD_NAME',
     'CLOUDINARY_API_KEY',
     'CLOUDINARY_API_SECRET',
-    'REDIS_URL',
+    'REDIS_HOST',
+    'REDIS_PORT',
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -82,7 +84,8 @@ const loadEnvVariable = (): EnvVariables => {
       CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
       CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
     },
-    REDIS_URL: process.env.REDIS_URL as string,
+    REDIS_HOST: process.env.REDIS_HOST as string,
+    REDIS_PORT: process.env.REDIS_PORT as string,
   };
 };
 

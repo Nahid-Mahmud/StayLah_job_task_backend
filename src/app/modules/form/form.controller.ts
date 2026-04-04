@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
+import { Prisma } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { formService } from './form.service';
 import { catchAsync } from '../../../utils/catchAsync';
 import sendResponse from '../../../utils/sendResponse';
+import { IFormSchema, generateZodSchema } from './form.utils';
 
 export const formController = {
   createForm: catchAsync(async (req: Request, res: Response) => {
@@ -32,7 +34,23 @@ export const formController = {
   submitForm: catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = req.body;
-    const result = await formService.submitForm(id as string, data);
+
+    // Fetch form and validation schema
+    const form = await formService.getFormById(id as string);
+    if (!form) {
+      res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: 'Form not found',
+      });
+      return;
+    }
+
+    const dynamicSchema = generateZodSchema(form.schema as unknown as IFormSchema);
+    
+    // Validate the incoming data against the dynamic schema
+    const validatedData = dynamicSchema.parse(data);
+
+    const result = await formService.submitForm(id as string, validatedData as Prisma.InputJsonValue);
 
     sendResponse(res, {
       success: true,

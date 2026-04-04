@@ -6,7 +6,7 @@ import { validateRequest } from '../../../middlewares/validateRequest';
 const router = Router();
 
 router.get(
-  '/dashboard/summary',
+  '/summary',
   validateRequest(dashboardValidation.getSummaryValidationSchema),
   dashboardController.getSummary
 );

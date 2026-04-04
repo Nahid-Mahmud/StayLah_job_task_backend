@@ -18,6 +18,8 @@ export const validateRequest =
 
       // Update request with validated data
       req.body = validatedData.body;
+      Object.defineProperty(req, 'query', { value: validatedData.query, writable: true, configurable: true });
+      Object.defineProperty(req, 'params', { value: validatedData.params, writable: true, configurable: true });
       next();
     } catch (error) {
       next(error);
