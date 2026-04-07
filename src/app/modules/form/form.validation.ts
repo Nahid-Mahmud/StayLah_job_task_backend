@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fieldSchema: z.ZodType<any> = z.lazy(() =>
   z.object({
     name: z.string().min(1, 'Field name is required'),

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { z } from 'zod';
 
 export type IFormField = {
@@ -30,10 +32,10 @@ export const generateZodSchema = (formSchema: IFormSchema) => {
         break;
       case 'nested':
         if (field.fields) {
-            // Recursive call for nested fields
-            fieldZod = generateZodSchema({ title: '', fields: field.fields });
+          // Recursive call for nested fields
+          fieldZod = generateZodSchema({ title: '', fields: field.fields });
         } else {
-            fieldZod = z.object({});
+          fieldZod = z.object({});
         }
         break;
       case 'text':
@@ -45,9 +47,12 @@ export const generateZodSchema = (formSchema: IFormSchema) => {
     if (!field.required) {
       fieldZod = fieldZod.optional().nullable();
     } else {
-        fieldZod = fieldZod.refine((val) => val !== undefined && val !== null && val !== '', {
-            message: `${field.label} is required`,
-        });
+      fieldZod = fieldZod.refine(
+        (val) => val !== undefined && val !== null && val !== '',
+        {
+          message: `${field.label} is required`,
+        }
+      );
     }
 
     shape[field.name] = fieldZod;
